@@ -26,10 +26,9 @@ RSpec.describe Api::V1::AlternativesController, type: :request do
 
   describe "POST /api/v1/alternatives" do
     it "endpoint test" do 
-      a0 = {question_id: 1, statement: "2", value: true}
+      a0 = [{question_id: 1, statement: "2", value: true}]
       post api_v1_alternatives_path(
         alternatives: a0)
-      raise response.body
       expect(response).to have_http_status(200)
     end
   end

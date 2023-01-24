@@ -47,7 +47,7 @@ module Api
       #TODO: Permitir multiplos updates em uma unica requisicao
       def update
         alternative = Alternative.find(params[:id])
-        if question.update(alternative_params_update)
+        if alternative.update(alternative_params_update)
           render json: {
             status:'SUCCESS', 
             message:'Alternativa atualizada com sucesso',
@@ -64,7 +64,7 @@ module Api
       def destroy 
         begin
           Alternative.transaction do
-            alt = Alternative.destroy(alternative_params_destroy)
+            alt = Alternative.destroy(params[:id])
           end
         rescue ActiveRecord::RecordInvalid => exception
           render json: {

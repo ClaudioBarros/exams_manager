@@ -64,10 +64,7 @@ module Api
 
       # Deletar prova
       def delete
-        participant = Participant.find_by(
-          user_id: params[:exam_id], 
-          question_id: params[:question_id], 
-        )
+        participant = Participant.find_by(params[:id])
         participant.destroy
         if participant.destroyed?
           render json: {
@@ -85,8 +82,8 @@ module Api
       private
       def params
         params.permit(
-          :exam_id, 
-          :question_id
+          :user_id, 
+          :exam_id
         ) 
       end
     end

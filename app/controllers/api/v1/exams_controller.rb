@@ -19,11 +19,13 @@ module Api
           end
         end
 
+
         render json: {
           status: 'SUCCESS', 
           message:"#{exams.size} Provas:", 
           data: data_output 
         },status: :ok
+      end
       end
 
       # Mostrar uma prova
@@ -135,7 +137,8 @@ module Api
           return true
         end
       end
-
     end
   end
+end
+end
 end

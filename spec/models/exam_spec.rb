@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Exam, type: :model do
+RSpec.describe Api::V1::ExamsController, type: :request do
 
   before(:each) do
     allow_any_instance_of(ApplicationController).to receive(
@@ -19,7 +19,7 @@ RSpec.describe Exam, type: :model do
 
   describe "GET /api/v1/exam/:id" do
     it "endpoint test" do 
-      get api_v1_exams_path(id: 1)
+      get api_v1_exam_path(id: 1)
       expect(response).to have_http_status(200)
     end
   end
