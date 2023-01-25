@@ -1,9 +1,9 @@
 module Api
   module V1
-    class ParticipantController < ApplicationController
+    class ParticipantsController < ApplicationController
       before_action :require_admin
       
-      #Listar todas as provas e questoes
+      #Listar todos os participantes 
       def index
         participants = Participant.order('exam_id DESC')
         render json: {
@@ -13,7 +13,7 @@ module Api
         },status: :ok
       end
 
-      #Listar uma prova e suas questoes
+      #Listar um participante
       def show
         participant = Participant.find_by(params[:id])
         render json: {
@@ -23,11 +23,11 @@ module Api
         },status: :ok
       end
 
-      # Adicionar nova questao a prova
+      # Adicionar novo participante
       def create
         begin 
           Participant.transaction do
-            participant = Participants.create!(params)
+            @participant = Participant.create!(participant_params)
           end
         rescue ActiveRecord::RecordInvalid => exception
           render json: { 
@@ -38,17 +38,14 @@ module Api
         render json: {
           status:'SUCCESS', 
           message:'Participante criado com sucesso',
-          data: participant
+          data: @participant
         },status: :ok
       end
 
       # Atualizar prova
       def update
-        participant = Participant.find_by(
-          participant_id: params[:exam_id], 
-          question_id: params[:question_id], 
-        )
-        if participant.update(exam_params)
+        participant = Participant.find_by(id: params[:id])
+        if participant.update(participant_params)
           render json: {
             status:'SUCCESS', 
             message:'Participante atualizado com sucesso',
@@ -63,7 +60,7 @@ module Api
       end
 
       # Deletar prova
-      def delete
+      def destroy
         participant = Participant.find_by(params[:id])
         participant.destroy
         if participant.destroyed?
@@ -80,7 +77,7 @@ module Api
       end
 
       private
-      def params
+      def participant_params
         params.permit(
           :user_id, 
           :exam_id

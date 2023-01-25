@@ -73,7 +73,7 @@ ActiveRecord::Base.transaction do
   qid = 1
   exams.each do |e|
     5.times do |j|      
-      ExamsQuestions.create!(
+      ExamQuestion.create!(
         exam_id: e, 
         question_id: questions[qid]
         )
@@ -85,7 +85,7 @@ ActiveRecord::Base.transaction do
   question_index = 1
   exams.each do |e|
     5.times do |j|      
-      ExamsQuestions.create!(
+      ExamQuestion.create!(
         exam_id: e, 
         question_id: questions[question_index]
         )
@@ -102,7 +102,7 @@ ActiveRecord::Base.transaction do
   exams.each do |e|
     test_takers.each do |t|
       Participant.create!(user_id: t, exam_id: e)
-      question_list = ExamsQuestions.where(exam_id: e)
+      question_list = ExamQuestion.where(exam_id: e)
       question_list.each do |q|     
         alts = Alternative.where(question_id: q.question_id).order('random()')
         UserAnswer.create!(

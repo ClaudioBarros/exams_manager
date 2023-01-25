@@ -8,6 +8,10 @@ RSpec.describe Api::V1::ExamsController, type: :request do
 
     allow_any_instance_of(ApplicationController).to receive(
       :require_admin).and_return(true)
+    
+    allow_any_instance_of(ApplicationController).to receive(
+      :current_user).and_return(User.all.first)
+
   end
 
   describe "GET /api/v1/exams" do
@@ -46,8 +50,10 @@ RSpec.describe Api::V1::ExamsController, type: :request do
 
   describe "DELETE /api/v1/exam/:id" do
     it "endpoint test" do 
-      delete api_v1_exam_path(id: 1)
+      exam = Exam.all.order('random()').first
+      delete api_v1_exam_path(id: exam.id)
       expect(response).to have_http_status(200)
     end
   end
+
 end

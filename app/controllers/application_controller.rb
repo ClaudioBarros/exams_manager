@@ -20,5 +20,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def set_current_user(user_json)
+    @current_user = user_json
+  end
+    
+
 end
 

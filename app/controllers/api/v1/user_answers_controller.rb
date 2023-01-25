@@ -2,6 +2,23 @@ module Api
   module V1
     class UserAnswersController < ApplicationController
 
+      def index
+        if current_user.admin? 
+
+          users_answers = UserAnswer.all
+
+          render json: {
+            status: 'SUCCESS', 
+            message:"#{users_answers.size} Respostas:", 
+            data: users_answers
+          },status: :ok
+        else
+          render json: { 
+            error: 'Usuário não autorizado.' 
+          },status: :unauthorized
+        end
+      end
+
       #Listar todas as respostas de todos os candidatos por prova
       def index_by_exam
         if current_user.admin? 
@@ -13,7 +30,7 @@ module Api
           render json: {
             status: 'SUCCESS', 
             message:"#{users_answers} Respostas:", 
-            data: format_exam_list(exams)
+            data: users_answers 
           },status: :ok
         else
           render json: { 
@@ -48,14 +65,15 @@ module Api
       # TODO: permitir criacao de varias respostas em uma unica requisicao
       def create
         if (current_user.admin? or 
-            is_test_taker(current_user.id, params[:exam_id]))
+            (is_test_taker(current_user.id, params[:exam_id]) and
+            (params[:user_id] == current_user.id)))
 
           user_answer = UserAnswer.new(user_answer_params)
           if user_answer.save
             render json: {
               status: 'SUCCESS', 
               message:"Resposta:", 
-              data: format_exam(exam)
+              data: user_answer
             },status: :ok
           else
             render json: { 
@@ -72,12 +90,10 @@ module Api
       #Atualizar uma resposta
       def update
         if (current_user.admin? or 
-            is_test_taker(current_user.id, params[:exam_id]))
+            (is_test_taker(current_user.id, params[:exam_id]) and
+            (params[:user_id] == current_user.id)))
 
-          user_answer = UserAnswer.find_by!(
-            user_id: params[:user_id],
-            exam_id: params[:exam_id]
-          )
+          user_answer = UserAnswer.find_by(params[:id])
 
           if user_answer.update(user_answer_params)
             render json: {
@@ -98,13 +114,9 @@ module Api
       end
 
       # Deletar uma resposta
-      def delete
+      def destroy
         if current_user.admin?
-          user_answer = UserAnswer.find_by!(
-            user_id: params[:user_id],
-            exam_id: params[:exam_id],
-            alternative_id:  params[:exam_id]
-          ) 
+          user_answer = UserAnswer.find_by!(id: params[:id])
           user_answer.destroy
           if user_answer.destroyed?
             render json: {
@@ -134,8 +146,8 @@ module Api
       end
 
       def is_test_taker(user_id, exam_id)
-        exams = Participants.where(user_id: user_id, exam_id: exam_id)
-        if exams.empty? 
+        p = Participants.where(user_id: user_id, exam_id: exam_id)
+        if p.empty? 
           return false
         else
           return true

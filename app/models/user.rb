@@ -1,4 +1,6 @@
 class User < ApplicationRecord
-  has_and_belongs_to_many :exams, through: :participants
+  has_many :participants
+  has_many :exams, through: :participants, dependent: :destroy
+  has_many :user_answers, dependent: :destroy
   has_secure_password
 end

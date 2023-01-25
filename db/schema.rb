@@ -20,19 +20,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_031452) do
     t.index ["question_id"], name: "index_alternatives_on_question_id"
   end
 
+  create_table "exam_questions", id: false, force: :cascade do |t|
+    t.integer "exam_id"
+    t.integer "question_id"
+    t.index ["exam_id"], name: "index_exam_questions_on_exam_id"
+    t.index ["question_id"], name: "index_exam_questions_on_question_id"
+  end
+
   create_table "exams", force: :cascade do |t|
     t.integer "topic_id"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_exams_on_topic_id"
-  end
-
-  create_table "exams_questions", id: false, force: :cascade do |t|
-    t.integer "exam_id"
-    t.integer "question_id"
-    t.index ["exam_id"], name: "index_exams_questions_on_exam_id"
-    t.index ["question_id"], name: "index_exams_questions_on_question_id"
   end
 
   create_table "participants", force: :cascade do |t|
@@ -79,9 +79,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_031452) do
   end
 
   add_foreign_key "alternatives", "questions"
+  add_foreign_key "exam_questions", "exams"
+  add_foreign_key "exam_questions", "questions"
   add_foreign_key "exams", "topics"
-  add_foreign_key "exams_questions", "exams"
-  add_foreign_key "exams_questions", "questions"
   add_foreign_key "participants", "exams"
   add_foreign_key "participants", "users"
   add_foreign_key "questions", "topics"

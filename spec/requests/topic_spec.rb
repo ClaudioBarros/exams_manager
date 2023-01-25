@@ -45,7 +45,7 @@ RSpec.describe Api::V1::TopicsController, type: :request do
 
   describe "DELETE /api/v1/topic/:id" do
     it "endpoint test" do 
-      delete api_v1_topic_path(id: 1)
+      delete api_v1_topic_path(id: 2)
       expect(response).to have_http_status(200)
     end
   end

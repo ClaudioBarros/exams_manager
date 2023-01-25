@@ -6,33 +6,33 @@ module Api
 
       #Listar todas as provas
       def index
-        if current_user.admin? do
+        if current_user.admin?
           exams = Exam.order('created_at DESC')
           data_output = format_exam_list(exams)
+
         else
-          exams = UserAnswers.select("exam_id").where(
+          exams = Participant.select("exam_id").where(
             "user_id = ?", current_user.id
           )
 
-          data_output = exams.map do |e|
-            {format_exam(Exams.find(:id))}
+          data_output = exams.each do |e|
+            format_exam(Exams.find(:id))
           end
         end
-
 
         render json: {
           status: 'SUCCESS', 
           message:"#{exams.size} Provas:", 
           data: data_output 
         },status: :ok
-      end
+
       end
 
       # Mostrar uma prova
       #TODO: exibir a prova com as questoes 
       def show
         if current_user.admin? or 
-            is_test_taker() do
+            is_test_taker() 
 
           exam = Exam.find(params[:id])
           render json: {
@@ -88,20 +88,20 @@ module Api
       end
 
       # Deletar prova
-      def delete
-        exam = Exam.find(params[:id]) 
-        exam.destroy
-        if exam.destroyed?
-          render json: {
-            status:'SUCCESS', 
-            message:'Prova deletada com sucesso',
-            data: exam
-          },status: :ok
-        else
+      def destroy
+        begin
+          Exam.transaction do
+            exam = Exam.destroy(params[:id])
+          end
+        rescue ActiveRecord::RecordInvalid => exception
           render json: {
             error: 'Erro ao deletar prova.',
           },status: :unprocessable_entity
+          return
         end
+          render json: {
+            message: 'Prova deletada com sucesso',
+          },status: :ok
       end
 
       private
@@ -118,13 +118,13 @@ module Api
           :id => exam.id, :name => exam.name, 
           :created_at => exam.created_at,
           :updated_at => exam.updated_at,
-          :questions => ExamsQuestions.select("question_id").where("exam_id = ?", exam.id)
+          :questions => ExamQuestion.select("question_id").where("exam_id = ?", exam.id)
         }
       end
       
       def format_exam_list(exams)
-        exam_list = exams.map do |e|
-          {format_exam(e)}
+        exam_list = exams.each do |e|
+          format_exam(e)
         end
         return exam_list
       end
@@ -139,6 +139,4 @@ module Api
       end
     end
   end
-end
-end
 end

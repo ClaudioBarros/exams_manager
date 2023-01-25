@@ -1,6 +1,6 @@
 class Topic < ApplicationRecord
-  has_many :exams
-  has_many :questions
+  has_many :exams, dependent: :nullify
+  has_many :questions, dependent: :nullify
 
   validates :name, presence: true
 end

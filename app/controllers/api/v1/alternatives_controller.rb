@@ -68,9 +68,9 @@ module Api
           end
         rescue ActiveRecord::RecordInvalid => exception
           render json: {
-              error: 'Erro ao deletar alternativas.',
-              message: exception
-            },status: :unprocessable_entity
+            error: 'Erro ao deletar alternativas.',
+            message: exception
+          },status: :unprocessable_entity
           return
         end
           render json:{
