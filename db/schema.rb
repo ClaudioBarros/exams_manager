@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_24_031452) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_26_201005) do
   create_table "alternatives", force: :cascade do |t|
     t.integer "question_id"
     t.text "statement"
@@ -20,9 +20,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_031452) do
     t.index ["question_id"], name: "index_alternatives_on_question_id"
   end
 
-  create_table "exam_questions", id: false, force: :cascade do |t|
+  create_table "exam_questions", force: :cascade do |t|
     t.integer "exam_id"
     t.integer "question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["exam_id"], name: "index_exam_questions_on_exam_id"
     t.index ["question_id"], name: "index_exam_questions_on_question_id"
   end
@@ -40,6 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_031452) do
     t.integer "exam_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "grade"
     t.index ["exam_id"], name: "index_participants_on_exam_id"
     t.index ["user_id"], name: "index_participants_on_user_id"
   end

@@ -13,6 +13,18 @@ module Api
         },status: :ok
       end
 
+      #Listar todos os participantes por prova, ordenados por nota
+      def index_by_exam_and_grade
+        participants = Participant.where(
+          exam_id: params[:eid]
+        ).order('grade DESC')
+        render json: {
+          status: 'SUCCESS', 
+          message:"Participantes", 
+          data: participants 
+        },status: :ok
+      end
+
       #Listar um participante
       def show
         participant = Participant.find_by(params[:id])
@@ -66,8 +78,7 @@ module Api
         if participant.destroyed?
           render json: {
             status:'SUCCESS', 
-            message:'Participante deletado com sucesso',
-            data: participant
+            message:'Participante deletado com sucesso'
           },status: :ok
         else
           render json: {
@@ -77,12 +88,33 @@ module Api
       end
 
       private
+
       def participant_params
         params.permit(
           :user_id, 
           :exam_id
         ) 
       end
+      
+      def calc_grade(p) #=> participant
+        num_questions = ExamQuestion.where(exam_id: p.exam_id).count
+
+        answers = UserAnswer.where(user_id: p.user_id, exam_id: p.exam_id)
+        
+        num_correct_questions = 0
+        answers.each do |a|
+          alt = Alternative.where(id: a.alternative_id)  
+          if(alt.value == true) 
+            num_correct_question += 1    
+          end
+        end
+
+        g = num_correct_questions/num_questions
+
+        p.update(grade: g)
+        
+      end
+
     end
   end
 end

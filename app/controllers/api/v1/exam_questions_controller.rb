@@ -54,8 +54,6 @@ module Api
               exam_id: params[:eid],
               question_id: params[:qid]
             )
-            puts(params)
-            puts(@e.attributes)
             @e.update(check_params)
           end
         rescue ActiveRecord::RecordInvalid => exception
@@ -70,28 +68,6 @@ module Api
           data: @e
         },status: :ok
       end
-
-=begin
-      # Atualizar prova
-      def update
-        e = ExamQuestion.find_by(
-          exam_id: params[:eid], 
-          question_id: params[:qid]
-        )
-        if e.update!(check_params)
-          render json: {
-            status:'SUCCESS', 
-            message:'Prova atualizada com sucesso',
-            data: e
-          },status: :ok
-        else
-          render json: {
-            error: 'Erro ao atualizar associação <Prova-Questão>.',
-          },status: :unprocessable_entity
-          return
-        end
-      end
-=end
 
       # Deletar prova
       def destroy 

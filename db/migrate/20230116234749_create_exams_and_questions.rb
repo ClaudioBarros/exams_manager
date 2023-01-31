@@ -17,9 +17,10 @@ class CreateExamsAndQuestions < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    create_table :exam_questions, id: false do |t|
+    create_table :exam_questions do |t|
       t.belongs_to :exams, index:true, foreign_key: true
       t.belongs_to :questions, index:true, foreign_key: true
+      t.timestamps
     end
 
     create_table :alternatives do |t|

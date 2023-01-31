@@ -5,7 +5,7 @@ module Api
       def index
         if current_user.admin? 
 
-          users_answers = UserAnswer.all
+          users_answers = UserAnswer.all.order('user_id DESC')
 
           render json: {
             status: 'SUCCESS', 
@@ -70,6 +70,7 @@ module Api
 
           user_answer = UserAnswer.new(user_answer_params)
           if user_answer.save
+            CalcGradesJob.perform_later(params[:exam_id], params[:user_id])
             render json: {
               status: 'SUCCESS', 
               message:"Resposta:", 
@@ -96,6 +97,7 @@ module Api
           user_answer = UserAnswer.find_by(params[:id])
 
           if user_answer.update(user_answer_params)
+            CalcGradesJob.perform_later(params[:exam_id], params[:user_id])
             render json: {
               status:'SUCCESS', 
               message:'Resposta atualizada com sucesso',

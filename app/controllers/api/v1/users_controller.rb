@@ -39,7 +39,7 @@ module Api
           },status: :ok
         else
           render json: { 
-            error: 'Erro ao criar usuário.'
+            error: 'Erro ao criar usuário'
           },status: :unprocessable_entity
         end
       end
@@ -54,7 +54,7 @@ module Api
           },status: :ok
         else
           render json: { 
-            error: 'Erro ao atualizar usuário.' 
+            error: 'Erro ao atualizar usuário' 
           },status: :unprocessable_entity
         end
       end

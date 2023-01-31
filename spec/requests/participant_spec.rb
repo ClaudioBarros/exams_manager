@@ -17,6 +17,13 @@ RSpec.describe Api::V1::ParticipantsController, type: :request do
     end
   end
 
+  describe "GET /api/v1/rank/:eid" do 
+    it "endpoint test" do
+      get api_v1_exam_rank_path(eid: 1)
+      expect(response).to have_http_status(200)
+    end
+  end
+
   describe "GET /api/v1/participant/:id" do
     it "endpoint test" do 
       get api_v1_participant_path(id: 1)

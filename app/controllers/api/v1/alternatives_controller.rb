@@ -61,6 +61,7 @@ module Api
       end
 
       #Deletar alternativa
+      #TODO: permitir destruicao de varias alternativas
       def destroy 
         begin
           Alternative.transaction do

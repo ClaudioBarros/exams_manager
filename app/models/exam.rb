@@ -1,7 +1,8 @@
 class Exam < ApplicationRecord
   has_one :topic
 
-  has_and_belongs_to_many :questions
+  has_many :exam_questions
+  has_many :questions, through: :exam_questions, dependent: :destroy
 
   has_many :participants
   has_many :users, through: :participants, dependent: :destroy

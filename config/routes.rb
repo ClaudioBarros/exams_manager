@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       resources :questions
       resources :alternatives
       resources :exams
+      get '/rank/:eid', to: 'participants#index_by_exam_and_grade', :as => :exam_rank
+
       resources :participants
 
       #ExamQuestions

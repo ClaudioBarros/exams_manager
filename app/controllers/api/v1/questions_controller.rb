@@ -34,7 +34,6 @@ module Api
         rescue ActiveRecord::RecordInvalid => exception
           render json: { 
             error: 'Erro ao criar questão.',
-            message: exception
           },status: :unprocessable_entity
           return
         end
@@ -44,25 +43,6 @@ module Api
           data: format_question(@question)
         },status: :ok
       end
-
-      # Criar nova questão
-=begin
-      def create
-        if current_user.admin?
-          question = Question.new(question_params)
-          if question.save
-            render json: {status:'SUCCESS', 
-                          message:'Questão criada com sucesso',
-                          data: question}, status: :ok
-          else
-            render json: { error: 'Erro ao criar questão.' }, status: :unprocessable_entity
-
-          end
-        else
-          render json: { error: 'Usuário não autorizado.' }, status: :unauthorized
-        end
-      end
-=end
 
       # Atualizar uma questão
       def update
